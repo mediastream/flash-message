@@ -37,3 +37,8 @@ and then call @flash() on any view (optional type)
 ```
 
 type can be any string. It's advised to use success, danger, warning or info for default template based on bootstrap
+
+## TODO ##
+
+* have a way to specify every next call to flash will be of a sertain type (ex: error = req.flash 'danger'; error 'message')
+* have a way to ask if there are messages on a given type (ex: flash.has 'danger')
