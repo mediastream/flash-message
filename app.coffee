@@ -37,11 +37,21 @@ class flashMessage
 
   set: (request) ->
     # req.flash
-    (message, type) =>
+    func = (message, type) =>
       if type? and message?
         request.session.flash = {} if !request.session.flash?
         request.session.flash[type] = [] if !request.session.flash[type]?
         request.session.flash[type].push message
+    func.has = @has(request)
+    func
+    
+  has: (request) ->
+    # req.flash.has
+    (type) =>
+      if type?
+        return request.session.flash[type]?.length > 0
+      else
+        return request.session.flash.length > 0
 
 flash_message = new flashMessage
 module.exports = (req, res, next) -> flash_message.init req, res, next
