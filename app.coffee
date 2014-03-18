@@ -6,7 +6,7 @@ class flashMessage
     template: '<div class="alert alert-<%=type%> alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><p><%=message%></p></div>'
     # any object or function (like i18n.__)
     source: (text) -> text
-    # calls to req.flash without any givven type will use default
+    # calls to req.flash without any given type will use default
     defaultType: null
 
   init: (options) ->
@@ -43,7 +43,7 @@ class flashMessage
   set: (request) ->
     # req.flash
     (message, type) =>
-      type = type ? @options.type
+      type = type ? @options.defaultType
       if type? and message?
         request.session.flash = {} if !request.session.flash?
         request.session.flash[type] = [] if !request.session.flash[type]?
