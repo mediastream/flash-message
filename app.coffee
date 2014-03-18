@@ -2,10 +2,12 @@ _ = require 'underscore'
 
 class flashMessage
   options:
-    #Template accepts: message, type
+    # Template accepts: message, type
     template: '<div class="alert alert-<%=type%> alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><p><%=message%></p></div>'
     # any object or function (like i18n.__)
     source: (text) -> text
+    # calls to req.flash without any givven type will use default
+    defaultType: null
 
   init: (options) ->
     # Process options
@@ -15,7 +17,10 @@ class flashMessage
       if !req.session?
         return throw new Error 'flash-message requires session'
       req.flash = @set req
+      req.flash.has = @has req
+      req.flash.use = @use req
       res.locals.flash = @get req
+      
       next()
 
   get: (req) ->
@@ -37,21 +42,27 @@ class flashMessage
 
   set: (request) ->
     # req.flash
-    func = (message, type) =>
+    (message, type) =>
+      type = type ? @options.type
       if type? and message?
         request.session.flash = {} if !request.session.flash?
         request.session.flash[type] = [] if !request.session.flash[type]?
         request.session.flash[type].push message
-    func.has = @has(request)
-    func
     
   has: (request) ->
     # req.flash.has
     (type) =>
+      type = type ? @options.type
       if type?
         return request.session.flash[type]?.length > 0
       else
         return request.session.flash.length > 0
+  
+  use: (request) ->
+    # req.flash.use
+    (type) =>
+      if type? and type isnt ''
+        @options.defaultType = type
 
 flash_message = new flashMessage
 module.exports = (req, res, next) -> flash_message.init req, res, next

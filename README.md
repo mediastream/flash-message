@@ -23,6 +23,7 @@ app.use app.router
 | ------------- | -------- | ----------------------------------------------------------------------- |
 | template      | false    | underscore template to be used                                          |
 | source        | false    | source for string replacement, can be function (like i18n.__) or object |
+| defaultType   | false    | if no type is set in req.flash, default will be used (default: null)    |
 
 ## Usage ##
 
@@ -36,9 +37,11 @@ and then call @flash() on any view (optional type)
 @flash(type)
 ```
 
+* If needed, default type for this request can be set with ```req.flash.use(type)```
+* When validating if bad things happened, ```req.flash.has(type)``` can be used.
+
 type can be any string. It's advised to use success, danger, warning or info for default template based on bootstrap
 
 ## TODO ##
 
-* have a way to specify every next call to flash will be of a sertain type (ex: error = req.flash 'danger'; error 'message')
-* have a way to ask if there are messages on a given type (ex: flash.has 'danger')
+* think how to improve this :D
