@@ -16,6 +16,7 @@ class flashMessage
     (req, res, next) =>
       if !req.session?
         return throw new Error 'flash-message requires session'
+      req.session.flash = {} if !req.session.flash?
       req.flash = @set req
       req.flash.has = @has req
       req.flash.use = @use req
@@ -45,7 +46,6 @@ class flashMessage
     (message, type) =>
       type = type ? @options.defaultType
       if type? and message?
-        request.session.flash = {} if !request.session.flash?
         request.session.flash[type] = [] if !request.session.flash[type]?
         request.session.flash[type].push message
     
