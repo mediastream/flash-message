@@ -21,7 +21,7 @@ class flashMessage
       req.flash.has = @has req
       req.flash.use = @use req
       res.locals.flash = @get req
-      
+
       next()
 
   get: (req) ->
@@ -34,7 +34,7 @@ class flashMessage
     # res.locals.flash
     (type) =>
       response = []
-      for key, val of req.session.flash
+      for key, val of req.session?.flash or []
         if !type? or key is type
           for text in req.session.flash[key]
             response.push _.template(@options.template, { message: get_msg(text), type: key })
@@ -45,19 +45,19 @@ class flashMessage
     # req.flash
     (message, type) =>
       type = type ? @options.defaultType
-      if type? and message?
+      if type? and message? and request.session?
         request.session.flash[type] = [] if !request.session.flash[type]?
         request.session.flash[type].push message
-    
+
   has: (request) ->
     # req.flash.has
     (type) =>
       type = type ? @options.type
       if type?
-        return request.session.flash[type]?.length > 0
+        return request.session?.flash?[type]?.length > 0
       else
-        return request.session.flash.length > 0
-  
+        return request.session?.flash?.length > 0
+
   use: (request) ->
     # req.flash.use
     (type) =>
